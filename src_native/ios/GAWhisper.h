@@ -15,7 +15,27 @@
     BOOL initialized;
 }
 
+/*!
+Current method is used to initialise Googlge Analytics tracking object.
+Params in command should contain two values:
+
+@id - this is an google analytics tracking number 
+@period - Google Analytics dispatch interval 
+
+ */
 - (void) init:(CDVInvokedUrlCommand*)command;
+
+
+/*!
+ Current method is used to track event which occurs in the application.
+ Params in command should contain:
+
+ @category - The event category
+ @eventAction - The event action
+ @eventLabel - Optional.The event label
+ @eventValue - Optional.The event value
+
+ */
 - (void) trackEvent:(CDVInvokedUrlCommand*)command;
 - (void) trackTransaction:(CDVInvokedUrlCommand*)command;
 - (void) trackItem:(CDVInvokedUrlCommand*)command;

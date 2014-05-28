@@ -13,17 +13,16 @@
 
 -(void) init:(CDVInvokedUrlCommand *)command
 {
-    NSString *callbackId = command.callbackId;
-    NSString *trackingNumber = [command.arguments objectAtIndex:0];
-    NSInteger dispatchPeriod = [[command.arguments objectAtIndex:1] intValue];
+    NSString    *callbackId = command.callbackId;
+    NSString    *trackingNumber = [command.arguments objectAtIndex:0];
+    NSInteger   dispatchPeriod = [[command.arguments objectAtIndex:1] intValue];
     
     CDVPluginResult *result = nil;
     
-    [GAI sharedInstance].trackUncaughtExceptions = YES;
-    // Optional: set Google Analytics dispatch interval to e.g. 20 seconds.
     [GAI sharedInstance].dispatchInterval = dispatchPeriod;
-    // Optional: set debug to YES for extra debugging information.
+    // Optional: if that propert is sate to yes - additional debug info will be displayed in the console
     //[GAI sharedInstance].debug = YES;
+    
     // Create tracker instance.
     [[GAI sharedInstance] trackerWithTrackingId:trackingNumber];
     
@@ -37,8 +36,20 @@
 
 - (void) trackEvent:(CDVInvokedUrlCommand*)command
 {
-    //todo
+    NSString    *callbackId = command.callbackId;
+    NSString    *category = [command.arguments objectAtIndex:0];
+    NSString    *eventAction = [command.arguments objectAtIndex:1];
+    NSString    *eventLabel = [command.arguments objectAtIndex:2];
+    NSNumber    *eventValue = [NSNumber numberWithInt:[[command.arguments objectAtIndex:3] intValue]];
+
+    if (initialized)
+    {
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:eventAction label:eventLabel value:eventValue] build]];
+        [self success:nil callbackId:callbackId];
+    }
 }
+
 - (void) trackTransaction:(CDVInvokedUrlCommand*)command
 {
     //todo
