@@ -12,7 +12,7 @@ cordova.define("GAWhisper", function(require, exports, module) {
      * @param  {string} period - set Google Analytics dispatch interval  
      */
     GAWhisper.prototype.init = function(success, fail, id, period) {
-        return exec(success, fail, 'GAWhisper', 'initGA', [id, period]);
+        return exec(success, fail, 'GAWhisper', 'init', [id, period]);
     };
 
     /**
@@ -90,8 +90,8 @@ cordova.define("GAWhisper", function(require, exports, module) {
      * @param  {number} index   index of the value
      * @param  {string} value   of the custom element
      */
-    GAWhisper.prototype.setCustomeValues = function(success, fail, index, value) {
-        return exec(success, fail, 'GAWhisper', 'setVariable', [index, value]);
+    GAWhisper.prototype.setCustomValue = function(success, fail, index, value) {
+        return exec(success, fail, 'GAWhisper', 'setCustomValue', [index, value]);
     };
     
     /**
