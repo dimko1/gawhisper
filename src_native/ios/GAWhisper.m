@@ -28,10 +28,9 @@
     
     initialized = YES;
     
-    result = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:
-              [NSString stringWithFormat:@"GAWhisper succefully initialized with tracking number = %@ and interval = %d seconds",trackingNumber, dispatchPeriod]];
+    NSString *message = [NSString stringWithFormat:@"GAWhisper succefully initialized with tracking number = %@ and interval = %d seconds",trackingNumber, dispatchPeriod];
     
-    [self success:result callbackId:callbackId];
+    [self sendSuccessMessage:message to:callbackId];
 }
 
 - (void) trackEvent:(CDVInvokedUrlCommand*)command
@@ -46,7 +45,9 @@
     {
         id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
         [tracker send:[[GAIDictionaryBuilder createEventWithCategory:category action:eventAction label:eventLabel value:eventValue] build]];
-        [self success:nil callbackId:callbackId];
+        NSString *message = @"Track event function called";
+        
+        [self sendSuccessMessage:message to:callbackId];
     }
 }
 
@@ -54,14 +55,29 @@
 {
     //todo
 }
+
 - (void) trackItem:(CDVInvokedUrlCommand*)command
 {
     //todo
 }
+
 - (void) trackView:(CDVInvokedUrlCommand*)command
 {
-    //todo
+    NSString    *callbackId = command.callbackId;
+    NSString    *screenName = [command.arguments objectAtIndexedSubscript:0];
+    
+    if (initialized){
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:screenName];
+        
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+        
+        NSString *message = @"Track view function called";
+        
+        [self sendSuccessMessage:message to:callbackId];
+    }
 }
+
 - (void) setCustomValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
     //todo
@@ -70,5 +86,13 @@
 {
     //todo
 }
+
+//calling success callback function of javascript part
+-(void) sendSuccessMessage:(NSString *)message to:(NSString *)callbackId
+{
+    CDVPluginResult *commandResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:message];
+    [self writeJavascript:[commandResult toSuccessCallbackString:callbackId]];
+}
+
 
 @end

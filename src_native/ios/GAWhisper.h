@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <Cordova/CDV.h>
 #import "GAI.h"
+#import "GAIDictionaryBuilder.h"
+#import "GAIFields.h"
 
 @interface GAWhisper : CDVPlugin
 {

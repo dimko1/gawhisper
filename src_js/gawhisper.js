@@ -79,7 +79,7 @@ cordova.define("GAWhisper", function(require, exports, module) {
      * @param  {string} screenName name of the screen
      */
     GAWhisper.prototype.trackView = function(success, fail, screenName) {
-        return exec(success, fail, 'GAWhisper', 'trackView', [pageURL]);
+        return exec(success, fail, 'GAWhisper', 'trackView', [screenName]);
     };
 
     /**
