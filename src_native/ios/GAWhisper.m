@@ -50,19 +50,6 @@
 }
 
 
-/**
- * Method is used to track transaction.
- * @param  {function} success
- * @param  {function} fail
- * @param  {object} params - params of the request
- *                           @transactionId - A unique ID representing the transaction. This ID should not collide with other transaction IDs.
- *                           @affilation - An entity with which the transaction should be affiliated (e.g. a particular store)
- *                           @revenue - The total revenue of a transaction, including tax and shipping
- *                           @tax - The total tax for a transaction
- *                           @shipping - The total cost of shipping for a transaction
- *                           @currency_code - Optional.The local currency of a transaction.
- */
-
 - (void) trackTransaction:(CDVInvokedUrlCommand*)command
 {
     NSString    *callbackId = command.callbackId;
