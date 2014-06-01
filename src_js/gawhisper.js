@@ -67,8 +67,9 @@ cordova.define("GAWhisper", function(require, exports, module) {
      *                           @quantity - The quantity of a product
      *                           @currency_code - Optional.The local currency of a transaction.
      */
-    GAWhisper.prototype.trackItem = function(success, fail, transactionId, affilation, revenue, tax, shipping, cost, segment, category) {
-        return exec(success, fail, 'GAWhisper', 'trackItem', [trackingNumber, orderId, source, feauter_id, feature_name, cost, segment, category]);
+    GAWhisper.prototype.trackItem = function(success, fail, params) {
+        return exec(success, fail, 'GAWhisper', 'trackItem', [params.transacvtionId, params.name,
+            params.SKU, params.category, params.price, params.quantity, params.currency_code]);
     };
 
 

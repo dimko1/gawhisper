@@ -42,7 +42,7 @@ Params in command should contain two values:
 - (void) trackTransaction:(CDVInvokedUrlCommand*)command;
 - (void) trackItem:(CDVInvokedUrlCommand*)command;
 - (void) trackView:(CDVInvokedUrlCommand*)command;
-- (void) setCustomValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+- (void) setCustomValue:(CDVInvokedUrlCommand*)command;
 - (void) exitGAWhisper: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
 
 @end

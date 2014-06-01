@@ -17,8 +17,6 @@
     NSString    *trackingNumber = [command.arguments objectAtIndex:0];
     NSInteger   dispatchPeriod = [[command.arguments objectAtIndex:1] intValue];
     
-    CDVPluginResult *result = nil;
-    
     [GAI sharedInstance].dispatchInterval = dispatchPeriod;
     // Optional: if that propert is sate to yes - additional debug info will be displayed in the console
     //[GAI sharedInstance].debug = YES;
@@ -51,9 +49,48 @@
     }
 }
 
+
+/**
+ * Method is used to track transaction.
+ * @param  {function} success
+ * @param  {function} fail
+ * @param  {object} params - params of the request
+ *                           @transactionId - A unique ID representing the transaction. This ID should not collide with other transaction IDs.
+ *                           @affilation - An entity with which the transaction should be affiliated (e.g. a particular store)
+ *                           @revenue - The total revenue of a transaction, including tax and shipping
+ *                           @tax - The total tax for a transaction
+ *                           @shipping - The total cost of shipping for a transaction
+ *                           @currency_code - Optional.The local currency of a transaction.
+ */
+
 - (void) trackTransaction:(CDVInvokedUrlCommand*)command
 {
-    //todo
+    NSString    *callbackId = command.callbackId;
+    NSString    *transcationId = [command.arguments objectAtIndexedSubscript:0];
+    NSString    *affilation_value = [command.arguments objectAtIndexedSubscript:1];
+    NSNumber    *revenue = [NSNumber numberWithInt:[[command.arguments objectAtIndexedSubscript:2] intValue]];
+    NSNumber    *tax = [NSNumber numberWithInt:[[command.arguments objectAtIndexedSubscript:3] intValue]];
+    NSNumber    *shipping = [NSNumber numberWithInt:[[command.arguments objectAtIndexedSubscript:4] intValue]];
+    NSString    *currency_code = [command.arguments objectAtIndexedSubscript:5];
+    
+    
+    if (initialized)
+    {
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        
+        [tracker send:
+        [[GAIDictionaryBuilder createTransactionWithId:transcationId affiliation:affilation_value
+                                                revenue:revenue
+                                                    tax:tax
+                                               shipping:shipping
+                                           currencyCode:currency_code] build]];
+        
+        NSString *message = @"Track transaction function called";
+        
+        [self sendSuccessMessage:message to:callbackId];
+        
+    }
+
 }
 
 - (void) trackItem:(CDVInvokedUrlCommand*)command
@@ -78,9 +115,25 @@
     }
 }
 
-- (void) setCustomValue:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+- (void) setCustomValue:(CDVInvokedUrlCommand*)command;
 {
-    //todo
+    NSString    *callbackId = command.callbackId;
+    
+    NSInteger   index =[[command.arguments objectAtIndex:0] intValue];
+    NSString    *value =[command.arguments objectAtIndexedSubscript:1];
+    
+    if (initialized){
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        
+        [tracker set:[GAIFields customDimensionForIndex:index ] value:value];
+        [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+        
+        NSString *message = @"Track view function called";
+        
+        [self sendSuccessMessage:message to:callbackId];
+    }
+
+
 }
 - (void) exitGAWhisper: (NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
 {
